@@ -10,7 +10,15 @@ server.on('request', (request, response) => {
         const metadata = services.fetchImageMetadata(id);
         console.log(metadata);
         console.log(request.headers);
-    }
+    };
+    
+    const body = [];
+    request.on('data', (chunk) => {
+        body.push(chunk);    
+    }).on('end', () => {
+        const parsedJSON = JSON.parse(Buffer.concat(body));
+        const userName = services.createUser(parsedJSON[0]['userName']);
+    })
 });
 
 server.listen(8080);
