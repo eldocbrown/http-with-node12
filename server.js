@@ -1,6 +1,7 @@
 const http = require('http');
 const url = require('url');
 const services = require('./services');
+const jsonBody = require('body/json');
 
 const server = http.createServer();
 server.on('request', (request, response) => {
@@ -12,13 +13,23 @@ server.on('request', (request, response) => {
         console.log(request.headers);
     };
     
+    jsonBody(request, response, (err, body) => {
+        if (err) {
+            console.log(err);
+        } else {
+        services.createUser(body['username']);
+        }
+    });
+
+    /* ## Vanilla JS body parsing ##
     const body = [];
     request.on('data', (chunk) => {
         body.push(chunk);    
     }).on('end', () => {
         const parsedJSON = JSON.parse(Buffer.concat(body));
         const userName = services.createUser(parsedJSON[0]['userName']);
-    })
+    });
+    */
 });
 
 server.listen(8080);
