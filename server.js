@@ -11,15 +11,21 @@ server.on('request', (request, response) => {
         const metadata = services.fetchImageMetadata(id);
         console.log(metadata);
         console.log(request.headers);
+    } else if (request.method === 'POST' && parsedUrl.pathname === '/users') {
+        jsonBody(request, response, (err, body) => {
+            if (err) {
+                console.log(err);
+            } else {
+            services.createUser(body['username']);
+            }
+        });
+    } else {
+        response.statusCode = 404;
+        response.setHeader('X-Powered-By', 'Node');
+        response.end();
     };
     
-    jsonBody(request, response, (err, body) => {
-        if (err) {
-            console.log(err);
-        } else {
-        services.createUser(body['username']);
-        }
-    });
+    
 
     /* ## Vanilla JS body parsing ##
     const body = [];
