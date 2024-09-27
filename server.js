@@ -9,6 +9,13 @@ server.on('request', (request, response) => {
     if (request.method === 'GET' && parsedUrl.pathname === '/metadata') {
         const { id } = parsedUrl.query;
         const metadata = services.fetchImageMetadata(id);
+        response.setHeader('Content-Type','application/json');
+        response.statusCode = 200;
+        const serializedJSON = JSON.stringify(metadata);
+        response.write(serializedJSON);
+        response.end();
+        
+        
         console.log(metadata);
         console.log(request.headers);
     } else if (request.method === 'POST' && parsedUrl.pathname === '/users') {
