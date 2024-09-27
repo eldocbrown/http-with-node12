@@ -2,6 +2,8 @@ const http = require('http');
 const url = require('url');
 const services = require('./services');
 const jsonBody = require('body/json');
+const fs = require('fs');
+const formidable = require('formidable');
 
 const server = http.createServer();
 server.on('request', (request, response) => {
@@ -26,10 +28,24 @@ server.on('request', (request, response) => {
             services.createUser(body['username']);
             }
         });
+    } else if (request.method === 'POST' && parsedUrl.pathname === '/upload') {
+        const form = new formidable.IncomingForm();
+        form.parse(request, (err, fields, files) => {
+            console.log('\n fields:');
+            console.log(fields);
+            console.log('\n files:');
+            console.log(files);
+            response.statusCode = 200;
+            response.end();
+        })
     } else {
+        fs.createReadStream('index.html').pipe(response);
+
+        /* Respuesta 404 ante una ruta no conocida
         response.statusCode = 404;
         response.setHeader('X-Powered-By', 'Node');
         response.end();
+        */
     };
     
     
