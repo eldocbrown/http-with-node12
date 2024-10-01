@@ -29,8 +29,21 @@ server.on('request', (request, response) => {
             }
         });
     } else if (request.method === 'POST' && parsedUrl.pathname === '/upload') {
-        const form = new formidable.IncomingForm();
+        const form = new formidable.IncomingForm({
+            uploadDir: __dirname,
+            keepExtensions: true,
+            multiples: true,
+            maxFileSize: 5 * 1024 * 1024,
+            filename: (name, ext, part, form) => {
+                return (name + ext)
+            }
+        });
         form.parse(request, (err, fields, files) => {
+            if (err) { 
+                console.log(err);
+                response.statusCode = 500;
+                response.end();
+            }
             console.log('\n fields:');
             console.log(fields);
             console.log('\n files:');
