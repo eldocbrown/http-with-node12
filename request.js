@@ -1,4 +1,4 @@
-const http = require('http');
+const https = require('https');
 
 const data = JSON.stringify( {
     userName: 'jcd'
@@ -6,12 +6,13 @@ const data = JSON.stringify( {
 
 const options = {
     hostname: 'localhost',
-    port: 8080,
+    port: 443,
     path: '/users',
     method: 'POST',
     headers: {
         'Content-Type': 'application/json',
-        'Content-Length': DataTransfer.length
+        'Content-Length': DataTransfer.length,
+        'Authorization': Buffer.from('myUsername' + ':' + 'myPassword').toString('base64')
     }
 
 }
